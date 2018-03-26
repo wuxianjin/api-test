@@ -5,11 +5,11 @@ pip install requests==2.5.0
 第二步：更改配置文件
 创建配置文件conf/apiconf.py
 修改配置文件，特别注意：
-a) BDP_HOST
-   BDP_PORT
-b) BDP_USER
-   BDP_PASS
-   BDP_DOMAIN
+a) API_HOST
+   API_PORT
+b) API_USER
+   API_PASS
+
 c) OPENDS_HOST
    OPENDS_PORT
    OPENDS_TOKEN
