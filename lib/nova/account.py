@@ -32,7 +32,7 @@ class Account(object):
     def phone(self):
         return self.phone
 
-    def getUid(self, username=apiconf.BDP_USER, password=apiconf.BDP_PASS):
+    def getUid(self, username=apiconf.USER_NAME, password=apiconf.PASS_WORD):
         BdpSDK.instance().change_user(apiconf.BDP_DOMAIN, username, password)
         uid = BdpSDK.instance().call_method_and_succ("userinfo", ret_expr='["result"]["user_id"]')
         self.user_id = uid

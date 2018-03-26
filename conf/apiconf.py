@@ -6,8 +6,8 @@
 @time: 2018-03-26-15 
 """
 # host
-BDP_HOST = '5xianjin.bdpdev.bdp.cn'
-BDP_PORT = 80
+API_HOST = '5xianjin.bdpdev.bdp.cn'
+API_PORT = 80
 
 # timeout
 TIME_OUT = 600
@@ -22,8 +22,8 @@ DOWNLOAD_DIR = "/tmp/"
 
 # user bdp_autotest
 
-BDP_USER = "admin"
-BDP_PASS = "123qweasd"
+USER_NAME = "admin"
+PASS_WORD = "123qweasd"
 BDP_DOMAIN = "ysn"
 
 # for openbdp bdp_autotest

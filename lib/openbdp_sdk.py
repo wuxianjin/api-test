@@ -7,7 +7,7 @@ import time
 import uuid
 from random import randint
 import requests
-from lib.BdpRequest import BDPRequest
+from lib.APIRequest import APIRequest
 from conf import apiconf
 from util import log
 
@@ -17,7 +17,7 @@ def dec_log(reserved_param=None):
         def _wrap_func(*args, **kwargs):
             rst = func(*args, **kwargs)
             assert isinstance(args[0], OpenbdpSdk)
-            log.getlog(BDPRequest.LOG_NAME).debug("API [%s] Response: %s" % (func.func_name, args[0].raw_data))
+            log.getlog(APIRequest.LOG_NAME).debug("API [%s] Response: %s" % (func.func_name, args[0].raw_data))
             return rst
 
         _wrap_func.__name__ = func.__name__
@@ -65,7 +65,7 @@ class OpenbdpSdk:
         self.access_token = access_token
         self.version = version
         self.user_name = ""
-        self.http_request = BDPRequest(apiconf.OPENBDP_HOST, apiconf.OPENBDP_PORT)
+        self.http_request = APIRequest(apiconf.OPENBDP_HOST, apiconf.OPENBDP_PORT)
         self.http_request.url_host = "%s/%s%s" % (self.http_request.url_host, 'api/', self.version)
         # self.http_request.url_host = "%s/%s" % (self.http_request.url_host, self.version)
         # add headers

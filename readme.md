@@ -3,7 +3,7 @@ pip install pytest==2.8.2
 pip install xlrd==0.9.4
 pip install requests==2.5.0
 第二步：更改配置文件
-创建配置文件conf/bdpconf.py
+创建配置文件conf/apiconf.py
 修改配置文件，特别注意：
 a) BDP_HOST
    BDP_PORT

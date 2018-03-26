@@ -12,7 +12,7 @@ import datetime
 import math
 
 import requests
-from lib.BdpRequest import BDPRequest
+from lib.APIRequest import APIRequest
 from conf import apiconf
 from util import log
 
@@ -25,7 +25,7 @@ def dec_log(reserved_param=None):
         def _wrap_func(*args, **kwargs):
             rst = func(*args, **kwargs)
             assert isinstance(args[0], BdpSDK)
-            log.getlog(BDPRequest.LOG_NAME).debug("API [%s] Response: %s" % (func.func_name, args[0].raw_data))
+            log.getlog(APIRequest.LOG_NAME).debug("API [%s] Response: %s" % (func.func_name, args[0].raw_data))
             return rst
 
         _wrap_func.__name__ = func.__name__
@@ -284,7 +284,7 @@ class BdpSDK:
         self.raw_data = {}
         self.user_agent = "BdpAuto_v1.8 Chrome/63.0.3239.132"
         self.user_name = ""
-        self.http_request = BDPRequest(apiconf.BDP_HOST, apiconf.BDP_PORT)
+        self.http_request = APIRequest(apiconf.API_HOST, apiconf.API_PORT)
         # add headers
         self.http_request.add_header("User-Agent", self.user_agent)
         self.http_request.add_header("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
@@ -440,7 +440,7 @@ class BdpSDK:
     def instance(cls):
         if not cls._sdk_instance:
             cls._sdk_instance = BdpSDK()
-            cls._sdk_instance.login(apiconf.BDP_USER, apiconf.BDP_PASS, apiconf.BDP_DOMAIN, update_token=True)
+            cls._sdk_instance.login(apiconf.USER_NAME, apiconf.PASS_WORD, apiconf.BDP_DOMAIN, update_token=True)
             assert cls._sdk_instance.islogin()
 
         return cls._sdk_instance

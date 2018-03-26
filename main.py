@@ -11,7 +11,7 @@ import time
 import select
 from conf import apiconf
 from util import util
-from data import meta_data
+
 
 # default encoding
 reload(sys)
@@ -113,7 +113,7 @@ def result_processor():
             for i in failed_list:
                 print "%s Failed" % i
 
-            print "testing \33[32m%s, \33[0min account:\33[32m[%s]\33[0m" % (apiconf.BDP_HOST, apiconf.BDP_USER)
+            print "testing \33[32m%s, \33[0min account:\33[32m[%s]\33[0m" % (apiconf.API_HOST, apiconf.USER_NAME)
             print "\33[32m%d passed\33[0m, \33[31m%d failed\33[0m, %d total" % (succ_count, failed_count, total_count)
 
         def _refresh_for_jenkis():
@@ -241,9 +241,9 @@ def multi_run():
 
 
 if util.plat_form() == "Mac":
-    print "testing \33[32m%s, \33[0min account:\33[32m[%s]\33[0m" % (apiconf.BDP_HOST, apiconf.BDP_USER)
+    print "testing \33[32m%s, \33[0min account:\33[32m[%s]\33[0m" % (apiconf.API_HOST, apiconf.USER_NAME)
 else:
-    print "testing %s, in account:[%s]" % (apiconf.BDP_HOST, apiconf.BDP_USER)
+    print "testing %s, in account:[%s]" % (apiconf.API_HOST, apiconf.USER_NAME)
 
 # mode ?
 if len(sys.argv) >= 2 and sys.argv[1].startswith("--") and sys.argv[1][2:] in bdp_run_mode:

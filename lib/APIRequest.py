@@ -7,12 +7,12 @@ from conf import apiconf
 from util import log
 
 
-class BDPRequest:
+class APIRequest:
     LOG_NAME = "request"
 
     def __init__(self, host, port):
 
-        schem = "https" if apiconf.BDP_PORT == 443 else "http"
+        schem = "https" if apiconf.API_PORT == 443 else "http"
 
         self.url_host = "%s://%s:%s" % (schem, host, port)
         self.bdp_session = requests.Session()

@@ -2,8 +2,8 @@
 # -*- coding: utf8 -*-
 # __author__ = '5xianjin'
 import pytest
-from lib.iron_man.account import Account
-from lib.iron_man.group import group
+from lib.nova.account import Account
+from lib.nova.group import group
 import time
 from lib.BdpSDK import BdpSDK
 import json
