@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 # __author__ = '5xianjin'
 from lib.BdpSDK import BdpSDK
-from conf import bdpconf
+from conf import apiconf
 import random
 from lib.openbdp_sdk import OpenbdpSdk
 import json
@@ -32,8 +32,8 @@ class Account(object):
     def phone(self):
         return self.phone
 
-    def getUid(self, username=bdpconf.BDP_USER, password=bdpconf.BDP_PASS):
-        BdpSDK.instance().change_user(bdpconf.BDP_DOMAIN, username, password)
+    def getUid(self, username=apiconf.BDP_USER, password=apiconf.BDP_PASS):
+        BdpSDK.instance().change_user(apiconf.BDP_DOMAIN, username, password)
         uid = BdpSDK.instance().call_method_and_succ("userinfo", ret_expr='["result"]["user_id"]')
         self.user_id = uid
         return uid
@@ -53,7 +53,7 @@ class Account(object):
             join_group_id_list = [gid]
 
         #"mobile": util.createPhone(),
-        userinfo = {"domain": bdpconf.BDP_DOMAIN, "username": username, "name": "name","mobile": util.createPhone(),
+        userinfo = {"domain": apiconf.BDP_DOMAIN, "username": username, "name": "name","mobile": util.createPhone(),
                     "email": "youxiang" + str(int(time.time())) + "@hotmail.com", "role": role, "sex": u"男", "position": "QAtest",
                     "manage_group_id_list": manage_group_id_list,
                     "join_group_id_list": join_group_id_list}
@@ -93,4 +93,4 @@ class Account(object):
 
     @classmethod
     def user_login(cls, username, password):
-        return BdpSDK.instance().call_method_and_succ("login", username, password, bdpconf.BDP_DOMAIN, ret_expr='')
+        return BdpSDK.instance().call_method_and_succ("login", username, password, apiconf.BDP_DOMAIN, ret_expr='')

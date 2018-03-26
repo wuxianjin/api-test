@@ -7,7 +7,7 @@ from lib.iron_man.group import group
 import time
 from lib.BdpSDK import BdpSDK
 import json
-from conf import bdpconf
+from conf import apiconf
 
 
 class Test_account(object):

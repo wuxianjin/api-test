@@ -3,9 +3,8 @@
 
 from requests.sessions import HTTPAdapter
 import requests
-import time
-from conf import bdpconf
-from lib import log
+from conf import apiconf
+from util import log
 
 
 class BDPRequest:
@@ -13,7 +12,7 @@ class BDPRequest:
 
     def __init__(self, host, port):
 
-        schem = "https" if bdpconf.BDP_PORT == 443 else "http"
+        schem = "https" if apiconf.BDP_PORT == 443 else "http"
 
         self.url_host = "%s://%s:%s" % (schem, host, port)
         self.bdp_session = requests.Session()
@@ -26,9 +25,9 @@ class BDPRequest:
     def _timeout(self):
 
         if requests.__version__ >= "2.9.1":
-            return 3, bdpconf.REQUEST_TIMEOUT
+            return 3, apiconf.REQUEST_TIMEOUT
         else:
-            return bdpconf.REQUEST_TIMEOUT
+            return apiconf.REQUEST_TIMEOUT
 
     def get(self, url):
 

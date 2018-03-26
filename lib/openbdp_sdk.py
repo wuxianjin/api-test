@@ -3,13 +3,13 @@
 
 import json
 from urllib import urlencode
-import requests
-from lib.BdpRequest import BDPRequest
-from conf import apiconf
-from lib import log
 import time
 import uuid
 from random import randint
+import requests
+from lib.BdpRequest import BDPRequest
+from conf import apiconf
+from util import log
 
 
 def dec_log(reserved_param=None):

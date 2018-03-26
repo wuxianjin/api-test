@@ -2,7 +2,6 @@
 # -*- coding: utf8 -*-
 # __author__ = '5xianjin'
 from lib.BdpSDK import BdpSDK
-from conf import bdpconf
 from lib.openbdp_sdk import OpenbdpSdk
 import json
 import pytest

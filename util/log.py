@@ -3,14 +3,14 @@
 
 import logging
 import os
-from conf import bdpconf
+from conf import apiconf
 import time
 
 
 log_dict = {}
 
-if not os.path.exists(bdpconf.LOG_DIR):
-    os.mkdir(bdpconf.LOG_DIR)
+if not os.path.exists(apiconf.LOG_DIR):
+    os.mkdir(apiconf.LOG_DIR)
 
 
 def getlog(name="bdp_auto"):
@@ -20,7 +20,7 @@ def getlog(name="bdp_auto"):
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
-    hd = logging.FileHandler(filename="%s/%s.log.%s" % (bdpconf.LOG_DIR, name, time.strftime("%F", time.localtime(time.time()))))
+    hd = logging.FileHandler(filename="%s/%s.log.%s" % (apiconf.LOG_DIR, name, time.strftime("%F", time.localtime(time.time()))))
     formatter = logging.Formatter("%(asctime)s - %(funcName)s - %(levelname)s - %(message)s")
     hd.setFormatter(formatter)
     logger.addHandler(hd)

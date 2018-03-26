@@ -1,25 +1,20 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-import requests
-from urllib import urlencode, unquote
+from urllib import urlencode
 import uuid
-from lib.BdpRequest import BDPRequest
 import random
 from random import randint
 import time
 import os
-import traceback
 import json
 import datetime
 import math
-import csv
-import pdb
-import copy
-import pytest
 
+import requests
+from lib.BdpRequest import BDPRequest
 from conf import apiconf
-from lib import log
+from util import log
 
 
 # used to print log
