@@ -9,7 +9,7 @@ import os
 import re
 import time
 import select
-from conf import bdpconf
+from conf import apiconf
 from util import util
 from data import meta_data
 
@@ -113,7 +113,7 @@ def result_processor():
             for i in failed_list:
                 print "%s Failed" % i
 
-            print "testing \33[32m%s, \33[0min account:\33[32m[%s]\33[0m" % (bdpconf.BDP_HOST, bdpconf.BDP_USER)
+            print "testing \33[32m%s, \33[0min account:\33[32m[%s]\33[0m" % (apiconf.BDP_HOST, apiconf.BDP_USER)
             print "\33[32m%d passed\33[0m, \33[31m%d failed\33[0m, %d total" % (succ_count, failed_count, total_count)
 
         def _refresh_for_jenkis():
@@ -172,10 +172,10 @@ def colect_result(fds):
     file_objs = [PipeFile(i) for i in fds]
 
     while True:
-        rds = select.select(file_objs, [], [], bdpconf.WAIT_TIME_OUT)
+        rds = select.select(file_objs, [], [], apiconf.WAIT_TIME_OUT)
 
         if not rds[0]:
-            print "wait for fd timeout:[%s], at %s" % (bdpconf.WAIT_TIME_OUT, time.strftime("%H:%M:%S"))
+            print "wait for fd timeout:[%s], at %s" % (apiconf.WAIT_TIME_OUT, time.strftime("%H:%M:%S"))
             break
 
         items = []
@@ -193,21 +193,21 @@ def colect_result(fds):
 
 def multi_run():
 
-    q_list = [Queue.Queue() for _ in xrange(0, bdpconf.PROCESS_COUNT)]
+    q_list = [Queue.Queue() for _ in xrange(0, apiconf.PROCESS_COUNT)]
     pids = list()
     pipes = list()
 
     index = 0
     for case in case_list(mark="single", is_reversed=True):
         # 第一步找出所有没有特殊要求的case，打散了跑，没有特殊需求是指可以并发跑不会冲突的
-        q_list[(index % (bdpconf.PROCESS_COUNT-1)) if bdpconf.PROCESS_COUNT > 1 else 0].put(case)
+        q_list[(index % (apiconf.PROCESS_COUNT-1)) if apiconf.PROCESS_COUNT > 1 else 0].put(case)
         index += 1
 
     for case in case_list(mark="single", is_reversed=False):
         # 第二步找出必须串行跑得case，单独放在一个进程跑
-        q_list[bdpconf.PROCESS_COUNT-1].put(case)
+        q_list[apiconf.PROCESS_COUNT-1].put(case)
 
-    for i in xrange(0, bdpconf.PROCESS_COUNT):
+    for i in xrange(0, apiconf.PROCESS_COUNT):
 
         r, w = os.pipe()
         pid = os.fork()
@@ -241,9 +241,9 @@ def multi_run():
 
 
 if util.plat_form() == "Mac":
-    print "testing \33[32m%s, \33[0min account:\33[32m[%s]\33[0m" % (bdpconf.BDP_HOST, bdpconf.BDP_USER)
+    print "testing \33[32m%s, \33[0min account:\33[32m[%s]\33[0m" % (apiconf.BDP_HOST, apiconf.BDP_USER)
 else:
-    print "testing %s, in account:[%s]" % (bdpconf.BDP_HOST, bdpconf.BDP_USER)
+    print "testing %s, in account:[%s]" % (apiconf.BDP_HOST, apiconf.BDP_USER)
 
 # mode ?
 if len(sys.argv) >= 2 and sys.argv[1].startswith("--") and sys.argv[1][2:] in bdp_run_mode:
