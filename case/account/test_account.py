@@ -128,6 +128,7 @@ class Test_account(object):
         with pytest.raises(AssertionError):
             Account.create(username, "123qweasd", gid)
         assert json.loads(BdpSDK.instance().raw_data)["status"] == "8003"
+        Account.user_del(uid)
 
     # 普通用户修改为管理员
     def test_account_permission(self):
