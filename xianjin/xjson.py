@@ -24,7 +24,17 @@ data = [
         }
     }
 ]
-print data
-print "\r"
-data = json.dumps(data)
-print data
+
+
+# print data
+# print "\r"
+# data = json.dumps(data)
+# print data
+class B(object):
+    def ttt(self):
+        return "hell"
+
+a = B()
+method = getattr(a, "ttt")
+
+print method

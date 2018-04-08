@@ -127,7 +127,6 @@ class OpenbdpSdk:
         if hasattr(self, method_name):
             # 获取对象的属性或者方法
             method = getattr(self, method_name)
-            callable()
             # 函数用于检查一个对象是否是可调用的
             if callable(method):
                 method(*args)
