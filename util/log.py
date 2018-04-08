@@ -13,7 +13,7 @@ if not os.path.exists(apiconf.LOG_DIR):
     os.mkdir(apiconf.LOG_DIR)
 
 
-def getlog(name="bdp_auto"):
+def getlog(name="api_auto"):
 
     if name in log_dict:
         return log_dict[name]

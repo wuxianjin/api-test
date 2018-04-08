@@ -64,10 +64,11 @@ class OpenbdpSdk:
         self.raw_data = {}
         self.access_token = access_token
         self.version = version
-        self.user_name = ""
         self.http_request = APIRequest(apiconf.OPENBDP_HOST, apiconf.OPENBDP_PORT)
-        self.http_request.url_host = "%s/%s%s" % (self.http_request.url_host, 'api/', self.version)
-        # self.http_request.url_host = "%s/%s" % (self.http_request.url_host, self.version)
+        # offline
+        # self.http_request.url_host = "%s/%s%s" % (self.http_request.url_host, 'api/', self.version)
+        # online
+        self.http_request.url_host = "%s/%s" % (self.http_request.url_host, self.version)
         # add headers
         self.http_request.add_header("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
         self.trace_id = ""
@@ -100,17 +101,13 @@ class OpenbdpSdk:
         return str_data
 
     def build_url(self, url, params=None):
-        # params = {
-        #     'access_token': self.access_token
-        # }
-        # assert isinstance(params, dict)
+
         if params is None:
             params = {
                 'access_token': self.access_token
             }
         else:
             assert isinstance(params, dict)
-            # params['access_token'] = self.access_token
 
         self.trace_id = "ironman_%s" % uuid.uuid3(uuid.NAMESPACE_DNS,
                                                   "%s_%s_%s" % (url, time.time(), randint(0, 100000)))
@@ -126,8 +123,12 @@ class OpenbdpSdk:
         return "%s?%s" % (url, urlencode(params))
 
     def call_method_and_succ(self, method_name, *args, **kwargs):
+        # 判断一个对象里面是否有name属性或者name方法，返回BOOL值
         if hasattr(self, method_name):
+            # 获取对象的属性或者方法
             method = getattr(self, method_name)
+            callable()
+            # 函数用于检查一个对象是否是可调用的
             if callable(method):
                 method(*args)
                 resp = json.loads(self.raw_data)
@@ -144,21 +145,6 @@ class OpenbdpSdk:
         if "access_token" not in body:
             body["access_token"] = self.access_token
 
-        # 正常传参不带flow_control
-        assert "flow_control" not in body
-
-        # 受灰度控制
-        if apiconf.BDP_SMALL_EMULATE:
-            body.update(dict(
-                flow_control="token"
-            ))
-
-        # 不受灰度控制,永远全量
-        else:
-            body.update(dict(
-                flow_control="full"
-            ))
-
         url = self.build_url(short_api)
         raw_body = self.build_post_param(body)
 
@@ -166,27 +152,10 @@ class OpenbdpSdk:
 
     def _json_post(self, short_api, params, body):
 
-        # assert isinstance(body, dict)
         assert isinstance(params, dict)
 
         if "access_token" not in params:
             params["access_token"] = self.access_token
-
-        # 正常传参不带flow_control
-        assert "flow_control" not in params
-
-        # 受灰度控制
-        if apiconf.BDP_SMALL_EMULATE:
-            params.update(dict(
-                flow_control="token"
-            ))
-
-        # 不受灰度控制,永远全量
-        else:
-            params.update(dict(
-                flow_control="full"
-            ))
-
         url = self.build_url(short_api, params)
 
         if type(body) is not str:

@@ -15,12 +15,15 @@ class APIRequest:
         schem = "https" if apiconf.API_PORT == 443 else "http"
 
         self.url_host = "%s://%s:%s" % (schem, host, port)
-        self.bdp_session = requests.Session()
 
-        self.bdp_session.mount("http://", HTTPAdapter(max_retries=0))
-        self.bdp_session.mount("https://", HTTPAdapter(max_retries=0))
-
+        self.api_session = requests.Session()
+        self.api_session.mount("http://", HTTPAdapter(max_retries=0))
+        self.api_session.mount("https://", HTTPAdapter(max_retries=0))
         self.errors = {}
+
+    def add_header(self, name, value):
+
+        self.api_session.headers.update({name: value})
 
     def _timeout(self):
 
@@ -33,7 +36,7 @@ class APIRequest:
 
         log.getlog(self.LOG_NAME).debug("GET %s" % self.url_host + url)
 
-        resp = self.bdp_session.get(self.url_host + url, timeout=self._timeout())
+        resp = self.api_session.get(self.url_host + url, timeout=self._timeout())
 
         def _read():
             return resp.text
@@ -52,7 +55,7 @@ class APIRequest:
                                         % (self.url_host + url,
                                            raw_data))
 
-        resp = self.bdp_session.post(self.url_host + url,
+        resp = self.api_session.post(self.url_host + url,
                                      # headers=self.headers,
                                      data=raw_data,
                                      stream=stream,
@@ -70,7 +73,3 @@ class APIRequest:
             print repr(e)
             raise
         return resp
-
-    def add_header(self, name, value):
-
-        self.bdp_session.headers.update({name: value})

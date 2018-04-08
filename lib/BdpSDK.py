@@ -1203,7 +1203,7 @@ class BdpSDK:
             self.user_name = resp["result"]["user_info"]["username"]
 
         if apiconf.BDP_SMALL_EMULATE:
-            cj = self.http_request.bdp_session.cookies
+            cj = self.http_request.api_session.cookies
             requests.utils.add_dict_to_cookiejar(cj, dict(domain=apiconf.BDP_DOMAIN))
 
     @dec_log()
@@ -1213,7 +1213,7 @@ class BdpSDK:
 
     def set_locale(self, locale="zh"):
 
-        cj = self.http_request.bdp_session.cookies
+        cj = self.http_request.api_session.cookies
         requests.utils.add_dict_to_cookiejar(cj, dict(locale=locale))
 
     def set_locale_en(self):

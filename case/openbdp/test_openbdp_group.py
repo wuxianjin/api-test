@@ -193,16 +193,8 @@ class TestOpenbdpGroupCase:
         resp = openbdp.call_method_and_succ("openbdp_userdelete", uid, ret_expr='')
         assert resp["status"] == "0"
 
-    def test_openbdp_grouplist(self):
-        openbdp = OpenbdpSdk.instance()
-        result = openbdp.call_method_and_succ("openbdp_grouplist", ret_expr='["result"]')
-        assert len(result) > 0
 
-    def test_openbdp_groupinfo(self):
-        openbdp = OpenbdpSdk.instance()
-        pid = openbdp.call_method_and_succ("openbdp_grouplist", ret_expr='["result"][0]["group_id"]')
-        result = openbdp.call_method_and_succ("openbdp_groupinfo", pid, ret_expr='["result"]')
-        assert len(result) > 0
+
 
     # 个用户每天调用该类型接口不超过1000次（暂定）
     def quuutest_openbdp_chartdata(self):
