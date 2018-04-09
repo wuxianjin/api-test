@@ -3,3 +3,5 @@
 *.xlsx
 *.csv
 .cache/*
+conf/*.py
+
