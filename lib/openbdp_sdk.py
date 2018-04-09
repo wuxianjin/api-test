@@ -122,6 +122,7 @@ class OpenbdpSdk:
         print "[%s]\t[%s]\t[%s]" % (now_time_str, url, params["trace_id"])
         return "%s?%s" % (url, urlencode(params))
 
+    # todo
     def call_method_and_succ(self, method_name, *args, **kwargs):
         # 判断一个对象里面是否有name属性或者name方法，返回BOOL值
         if hasattr(self, method_name):
@@ -130,6 +131,7 @@ class OpenbdpSdk:
             # 函数用于检查一个对象是否是可调用的
             if callable(method):
                 method(*args)
+                # json.loads()用于将str类型的数据转成dict
                 resp = json.loads(self.raw_data)
                 assert resp["status"] == "0"
                 if "ret_expr" in kwargs:
@@ -180,8 +182,8 @@ class OpenbdpSdk:
     @dec_log()
     def openbdp_group_update_fields(self, data):
         assert isinstance(data, list or json)
-        if isinstance(data, list or json):
-            data = json.dumps(data)
+        # 用于将dict类型的数据转成str
+        data = json.dumps(data)
         req_param = {
             "group_fields": data
         }

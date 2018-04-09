@@ -12,6 +12,8 @@ import time
 # print time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 # print type(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
 
-last_request_time = int(time.mktime(time.strptime(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), '%Y-%m-%d %H:%M:%S')))
-print last_request_time
+# last_request_time = int(time.mktime(time.strptime(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), '%Y-%m-%d %H:%M:%S')))
+# print last_request_time
 
+t = None
+print not None
