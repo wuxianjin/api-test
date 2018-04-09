@@ -4,4 +4,5 @@
 *.csv
 .cache/*
 conf/*.py
-
+*.list
+*.txt

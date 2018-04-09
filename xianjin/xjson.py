@@ -7,34 +7,30 @@
 """
 import json
 
-data = [
-    {
-        "name": "密级",
-        "type": "text",
-        "config": {
-            "hint": "Please input..."
-        }
-    },
+name_emb = {'a':'1111','b':'2222','c':'3333','d':'4444'}
+#传参
+jsDumps = json.dumps(name_emb)
+#获取返回值 用于将str类型的数据转成dict
+# 'a'变成了u'a'是因为发生了类型转换，str会转换成unicode
+jsLoads = json.loads(jsDumps)
 
-    {
-        "name": "手机品牌",
-        "type": "select",
-        "config": {
-            "options": ["apple", "vivo", "huawei"]
-        }
-    }
-]
+print(name_emb)
+print(type(name_emb))
+
+print(jsDumps)
+print(type(jsDumps))
+
+print(jsLoads)
+print(type(jsLoads))
 
 
-# print data
-# print "\r"
-# data = json.dumps(data)
-# print data
-class B(object):
-    def ttt(self):
-        return "hell"
 
-a = B()
-method = getattr(a, "ttt")
 
-print method
+# class B(object):
+#     def ttt(self):
+#         return "hell"
+#
+# a = B()
+# method = getattr(a, "ttt")
+#
+# print str(method)
