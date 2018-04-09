@@ -128,13 +128,14 @@ class OpenbdpSdk:
         if hasattr(self, method_name):
             # 获取对象的属性或者方法
             method = getattr(self, method_name)
-            # 函数用于检查一个对象是否是可调用的
+            # 用于检查一个对象/方法是否是可调用
             if callable(method):
                 method(*args)
                 # json.loads()用于将str类型的数据转成dict
                 resp = json.loads(self.raw_data)
                 assert resp["status"] == "0"
                 if "ret_expr" in kwargs:
+                    # 把str转化为dict
                     return eval("resp" + kwargs['ret_expr'])
             else:
                 log.getlog().warning("attribute[%s] not callable" % method_name)
