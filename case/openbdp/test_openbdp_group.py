@@ -37,7 +37,7 @@ class TestOpenbdpGroupCase:
             }
         ]
 
-        openbdp.call_method_and_succ("openbdp_group_update_fields", data)
+        # openbdp.call_method_and_succ("openbdp_group_update_fields", data)
         res = openbdp.call_method_and_succ("openbdp_group_list_fields", ret_expr='["result"]')
         # print sorted(res)
         assert sorted(res)[0]['name'] == "密级"

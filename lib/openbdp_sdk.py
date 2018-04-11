@@ -106,20 +106,12 @@ class OpenbdpSdk:
             params = {
                 'access_token': self.access_token
             }
+
         else:
             assert isinstance(params, dict)
 
-        self.trace_id = "ironman_%s" % uuid.uuid3(uuid.NAMESPACE_DNS,
-                                                  "%s_%s_%s" % (url, time.time(), randint(0, 100000)))
-
-        self.trace_id = "ironman_%s" % uuid.uuid3(uuid.NAMESPACE_DNS,
-                                                  "%s_%s_%s" % (url, time.time(), randint(0, 100000)))
-
+        self.trace_id = "trace_%s" % uuid.uuid3(uuid.NAMESPACE_DNS, "%s_%s_%s" % (url, time.time(), randint(0, 100000)))
         params["trace_id"] = self.trace_id
-        now_time = time.time()
-        ms_str = str(int((now_time - long(now_time)) * 1000))
-        now_time_str = time.strftime("%F %T", time.localtime(now_time)) + "," + ms_str
-        print "[%s]\t[%s]\t[%s]" % (now_time_str, url, params["trace_id"])
         return "%s?%s" % (url, urlencode(params))
 
     # todo
@@ -138,14 +130,14 @@ class OpenbdpSdk:
                     # 把str转化为dict
                     return eval("resp" + kwargs['ret_expr'])
             else:
-                log.getlog().warning("attribute[%s] not callable" % method_name)
+                log.getlog().debug("attribute[%s] not callable" % method_name)
         else:
-            log.getlog().warning("function %s not found" % method_name)
+            log.getlog().debug("function %s not found" % method_name)
 
     def _send_post(self, short_api, body={}):
 
-        if "access_token" not in body:
-            body["access_token"] = self.access_token
+        # if "access_token" not in body:
+        #     body["access_token"] = self.access_token
 
         url = self.build_url(short_api)
         raw_body = self.build_post_param(body)
