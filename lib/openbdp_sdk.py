@@ -60,6 +60,8 @@ class OpenbdpSdk:
     # chart data
     open_api_chart_data = '/chart/data'
 
+
+
     def __init__(self, access_token="", version=""):
         self.raw_data = {}
         self.access_token = access_token
@@ -157,6 +159,9 @@ class OpenbdpSdk:
             self.raw_data = self.http_request.post(url, json.dumps(body)).read()
         else:
             self.raw_data = self.http_request.post(url, body).read()
+
+
+
 
     @dec_log()
     def openbdp_chart_data(self, ct_id):
