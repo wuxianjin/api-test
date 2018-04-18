@@ -146,19 +146,19 @@ class OpenbdpSdk:
 
         self.raw_data = self.http_request.post(url, raw_body).read()
 
-    def _json_post(self, short_api, params, body):
-
-        assert isinstance(params, dict)
-
-        if "access_token" not in params:
-            params["access_token"] = self.access_token
-        url = self.build_url(short_api, params)
-
-        if type(body) is not str:
-
-            self.raw_data = self.http_request.post(url, json.dumps(body)).read()
-        else:
-            self.raw_data = self.http_request.post(url, body).read()
+    # def _json_post(self, short_api, params, body):
+    #
+    #     assert isinstance(params, dict)
+    #
+    #     if "access_token" not in params:
+    #         params["access_token"] = self.access_token
+    #     url = self.build_url(short_api, params)
+    #
+    #     if type(body) is not str:
+    #
+    #         self.raw_data = self.http_request.post(url, json.dumps(body)).read()
+    #     else:
+    #         self.raw_data = self.http_request.post(url, body).read()
 
 
 
