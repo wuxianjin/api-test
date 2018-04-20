@@ -11,15 +11,14 @@ from lib.APIRequest import APIRequest
 from conf import apiconf
 from util import log
 
-
-def dec_log(reserved_param=None):
+# reserved_param=None
+def dec_log():
     def _out_wrap(func):
         def _wrap_func(*args, **kwargs):
             rst = func(*args, **kwargs)
             assert isinstance(args[0], OpenbdpSdk)
             log.getlog(APIRequest.LOG_NAME).debug("API [%s] Response: %s" % (func.func_name, args[0].raw_data))
             return rst
-
         _wrap_func.__name__ = func.__name__
         return _wrap_func
 

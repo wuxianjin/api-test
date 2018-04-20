@@ -15,29 +15,21 @@ from conf import apiconf
 from util import log
 
 
-def dec_log(reserved_param=None):
-    def _out_wrap(func):
-        def _wrap_func(*args, **kwargs):
-            rst = func(*args, **kwargs)
-            assert isinstance(args[0], OpenbdpSdk)
-            log.getlog(APIRequest.LOG_NAME).debug("API [%s] Response: %s" % (func.func_name, args[0].raw_data))
-            return rst
+def dec_log(func):
+    def wrapper(*args, **kwargs):
+        log.getlog(APIRequest.LOG_NAME).debug("API [%s] Response: %s" % (func.func_name, args[0].raw_data))
+        return func(*args, **kwargs)
 
-        _wrap_func.__name__ = func.__name__
-        return _wrap_func
-
-    return _out_wrap
+    return wrapper
 
 
-class OpenbdpSdk:
+class mobSdk:
     _sdk_instance = None
     # open api user
     open_api_userInfo = '/user/info'
     open_api_tb_down = '/tb/export/download'
     # chart data
     open_api_chart_data = '/chart/data'
-
-
 
     def __init__(self, access_token="", version=""):
         self.raw_data = {}
@@ -112,14 +104,9 @@ class OpenbdpSdk:
 
         self.raw_data = self.http_request.post(url, raw_body).read()
 
-
-
-
-
     @dec_log()
     def openbdp_chart_data(self, ct_id):
         req_param = {
             "ct_id": ct_id
         }
         self._send_post(self.open_api_chart_data, req_param)
-
