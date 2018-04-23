@@ -15,29 +15,31 @@ from conf import apiconf
 from util import log
 
 
-def dec_log(func):
-    def wrapper(*args, **kwargs):
-        log.getlog(APIRequest.LOG_NAME).debug("API [%s] Response: %s" % (func.func_name, args[0].raw_data))
-        return func(*args, **kwargs)
+#
+def dec_log(reserved_param=None):
+    def _out_wrap(func):
+        def _wrap_func(*args, **kwargs):
+            rst = func(*args, **kwargs)
+            assert isinstance(args[0], mobSdk)
+            log.getlog(APIRequest.LOG_NAME).debug("API [%s] Response: %s" % (func.func_name, args[0].raw_data))
+            return rst
 
-    return wrapper
+        _wrap_func.__name__ = func.__name__
+        return _wrap_func
+
+    return _out_wrap
 
 
 class mobSdk:
     _sdk_instance = None
-    # open api user
-    open_api_userInfo = '/user/info'
-    open_api_tb_down = '/tb/export/download'
-    # chart data
-    open_api_chart_data = '/chart/data'
+    mob_chartdata = '/mob/chart/data'
 
-    def __init__(self, access_token="", version=""):
+    def __init__(self, access_token=""):
         self.raw_data = {}
         self.access_token = access_token
-        self.version = version
-        self.http_request = APIRequest(apiconf.OPENBDP_HOST, apiconf.OPENBDP_PORT)
+        self.http_request = APIRequest(apiconf.API_HOST, apiconf.API_PORT)
         # online
-        self.http_request.url_host = "%s/%s" % (self.http_request.url_host, self.version)
+        self.http_request.url_host = "%s" % (self.http_request.url_host)
         # add headers
         self.http_request.add_header("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
         self.trace_id = ""
@@ -45,7 +47,7 @@ class mobSdk:
     @classmethod
     def instance(cls):
         if not cls._sdk_instance:
-            cls._sdk_instance = OpenbdpSdk(apiconf.OPENBDP_TOKEN, apiconf.OPENBDP_VERSION)
+            cls._sdk_instance = mobSdk(apiconf.MOB_TOKEN)
 
         return cls._sdk_instance
 
@@ -75,22 +77,21 @@ class mobSdk:
 
         self.trace_id = "trace_%s" % uuid.uuid3(uuid.NAMESPACE_DNS, "%s_%s_%s" % (url, time.time(), randint(0, 100000)))
         params["trace_id"] = self.trace_id
+        # params["system"] = 'android'
+        # params["app_ver"] = '5.3'
+        # params["ct_id"] = 'ct_9f98ead215523a181035f871cf410a3e'
+
         return "%s?%s" % (url, urlencode(params))
 
     # todo
     def call_method_and_succ(self, method_name, *args, **kwargs):
-        # 判断一个对象里面是否有name属性或者name方法，返回BOOL值
         if hasattr(self, method_name):
-            # 获取对象的属性或者方法
             method = getattr(self, method_name)
-            # 用于检查一个对象/方法是否是可调用
             if callable(method):
                 method(*args)
-                # json.loads()用于将str类型的数据转成dict
                 resp = json.loads(self.raw_data)
                 assert resp["status"] == "0"
                 if "ret_expr" in kwargs:
-                    # 把str转化为dict
                     return eval("resp" + kwargs['ret_expr'])
             else:
                 log.getlog().debug("attribute[%s] not callable" % method_name)
@@ -105,8 +106,11 @@ class mobSdk:
         self.raw_data = self.http_request.post(url, raw_body).read()
 
     @dec_log()
-    def openbdp_chart_data(self, ct_id):
+    def mob_chart_data(self, system, app_ver, ct_id):
         req_param = {
-            "ct_id": ct_id
+            "ct_id": ct_id,
+            "system": system,
+            "app_ver": app_ver
+
         }
-        self._send_post(self.open_api_chart_data, req_param)
+        self._send_post(self.mob_chartdata, req_param)
