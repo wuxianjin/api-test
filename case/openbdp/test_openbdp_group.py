@@ -87,33 +87,6 @@ class TestOpenbdpGroupCase:
         resp = openbdp.call_method_and_succ("openbdp_groupdel", T, ret_expr='')
         assert resp["status"] == "0"
 
-    def test_openbdp_group_10create(self):
-        openbdp = OpenbdpSdk.instance()
-        name = "openbdpwuxianjino"
-        pid = openbdp.call_method_and_succ("openbdp_grouplist", ret_expr='["result"][0]["group_id"]')
-        gid = openbdp.call_method_and_succ("openbdp_groupcreate", name, pid, ret_expr='["result"]')
-        T = gid
-        result = openbdp.call_method_and_succ("openbdp_groupinfo", gid, ret_expr='["result"]')
-        assert result["name"] == name
-        assert result["group_id"] == gid
-        count = 1
-        while (count < 11):
-            name = "obwuxianjin" + str(count)
-            if count == 10:
-                with pytest.raises(AssertionError):
-                    openbdp.call_method_and_succ("openbdp_groupcreate", name, gid, ret_expr='["result"]')
-                assert json.loads(openbdp.raw_data)["status"] == "12012"
-            else:
-                ggid = openbdp.call_method_and_succ("openbdp_groupcreate", name, gid, ret_expr='["result"]')
-                result = openbdp.call_method_and_succ("openbdp_groupinfo", ggid, ret_expr='["result"]')
-                assert result["name"] == name
-                assert result["group_id"] == ggid
-                gid = ggid
-            count = count + 1
-        # 清除测试数据
-        resp = openbdp.call_method_and_succ("openbdp_groupdel", T, ret_expr='')
-        assert resp["status"] == "0"
-
     def test_openbdp_noparen_id_name(self):
         openbdp = OpenbdpSdk.instance()
         name = ""
@@ -142,71 +115,8 @@ class TestOpenbdpGroupCase:
         resp = openbdp.call_method_and_succ("openbdp_groupdel", gid, ret_expr='')
         assert resp["status"] == "0"
 
-    def test_openbdp_group_user_manager(self):
-        openbdp = OpenbdpSdk.instance()
-        gname = "groupname" + str(time.time())
-        pid = openbdp.call_method_and_succ("openbdp_grouplist", ret_expr='["result"][0]["group_id"]')
-        gid = openbdp.call_method_and_succ("openbdp_groupcreate", gname, pid, ret_expr='["result"]')
-        result = openbdp.call_method_and_succ("openbdp_groupinfo", gid, ret_expr='["result"]')
-        assert result["name"] == gname
-        assert result["group_id"] == gid
-        assert result["parent_id"] == pid
-        # add user
-        username = "username" + str(time.time())
-        name = "name" + str(time.time())
-        mobile = self.createPhone()
-        password = "123qweasd",
-        role = 3
-        uid = openbdp.call_method_and_succ("openbdp_userCreate", username, name, mobile, password, role,
-                                           ret_expr='["result"]')
-        result = openbdp.call_method_and_succ("openbdp_userInfo", uid, ret_expr='["result"]')
-        assert result["username"] == username
-        assert result["name"] == name
-        assert result["mobile"] == mobile
-        assert result["role"] == role
-        user_ids = [uid]
-        # 添加组员
-        openbdp.call_method_and_succ("openbdp_group_adduser", gid, user_ids, ret_expr='["result"]')
-        result = openbdp.call_method_and_succ("openbdp_groupinfo", gid, ret_expr='["result"]')
-        assert result["name"] == gname
-        assert result["group_users"][0]["user_id"] == uid
-        # 删除组员
-        resp = openbdp.call_method_and_succ("openbdp_group_deluser", gid, user_ids, ret_expr='')
-        assert resp["status"] == "0"
-        result = openbdp.call_method_and_succ("openbdp_groupinfo", gid, ret_expr='["result"]')
-        assert result["name"] == gname
-        assert len(result["group_users"]) == 0
-        # 添加管理员
-        openbdp.call_method_and_succ("openbdp_group_addmanager", gid, user_ids, ret_expr='["result"]')
-        result = openbdp.call_method_and_succ("openbdp_groupinfo", gid, ret_expr='["result"]')
-        assert result["name"] == gname
-        assert result["group_managers"][0]["user_id"] == uid
-        # 删除管理员
-        resp = openbdp.call_method_and_succ("openbdp_group_delmanager", gid, user_ids, ret_expr='')
-        assert resp["status"] == "0"
-        result = openbdp.call_method_and_succ("openbdp_groupinfo", gid, ret_expr='["result"]')
-        assert result["name"] == gname
-        assert len(result["group_managers"]) == 0
-        # 清除测试数据
-        resp = openbdp.call_method_and_succ("openbdp_groupdel", gid, ret_expr='')
-        assert resp["status"] == "0"
-        resp = openbdp.call_method_and_succ("openbdp_userdelete", uid, ret_expr='')
-        assert resp["status"] == "0"
 
 
 
 
-    # 个用户每天调用该类型接口不超过1000次（暂定）
-    def quuutest_openbdp_chartdata(self):
-        openbdp = OpenbdpSdk.instance()
-        ct_id = "ct_f1388840b892b2929a23370ebcd77121"
-        count = 0
-        while (count < 10001):
-            if count == 1000:
-                with pytest.raises(AssertionError):
-                    result = openbdp.call_method_and_succ("openbdp_chart_data", ct_id, ret_expr='')
-                assert json.loads(openbdp.raw_data)["status"] == "140001"
-            else:
-                openbdp.call_method_and_succ("openbdp_chart_data", ct_id, ret_expr='')
-            count = count + 1
 

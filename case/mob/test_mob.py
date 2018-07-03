@@ -11,8 +11,8 @@ from lib.MobSDK import mobSdk
 
 class Test_mob_data(object):
     @pytest.mark.parametrize("mob_sys, mob_ver", [
-        ("iphone os", "3.1.11"),
-        ("android", "3.0.15"),
+        ("iphone os", "3.5"),
+        ("android", "3.6"),
     ])
     def test_char_data(self, mob_sys, mob_ver):
         mob = mobSdk.instance()
