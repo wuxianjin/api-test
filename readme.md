@@ -12,11 +12,7 @@ a) API_HOST
 b) API_USER
    API_PASS
 
-c) OPENDS_HOST
-   OPENDS_PORT
-   OPENDS_TOKEN
-
-第五步：并发执行case
+第三步：并发执行case
 
 python main.py
 
