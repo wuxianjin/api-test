@@ -4,7 +4,7 @@
 import sys
 import pytest
 import traceback
-import Queue
+from queue import Queue
 import os
 import re
 import time
@@ -12,10 +12,8 @@ import select
 from conf import apiconf
 from util import util
 
-
 # default encoding
-reload(sys)
-print "current encoding is %s" % sys.getdefaultencoding()
+print("current encoding is %s" % sys.getdefaultencoding())
 sys.setdefaultencoding('utf-8')
 
 # add search path
@@ -25,7 +23,6 @@ bdp_run_mode = ("format_space", "create_data")
 
 
 class PipeFile(object):
-
     def __init__(self, fd):
         self.fd = fd
         self.buf = ""
@@ -34,7 +31,6 @@ class PipeFile(object):
         return self.fd
 
     def readlines(self):
-
         self.buf += os.read(self.fd, 65535 * 1000)
 
         lines = self.buf.split("\n")
@@ -45,7 +41,6 @@ class PipeFile(object):
 
 
 def casefilter(line):
-
     m = re.match(r" *<Function '([^\[\]]*)(\[.*\])?'>", line)
 
     case_name = m.expand(r"\1") if m else ""
@@ -54,7 +49,6 @@ def casefilter(line):
 
 
 def case_list(mark="", is_reversed=False):
-
     oldstd = sys.stdout
 
     fp = open("./case.list", "w")
@@ -94,7 +88,6 @@ def case_list(mark="", is_reversed=False):
 
 
 def result_processor():
-
     fname = "raw_result_%s.txt" % time.strftime("%F")
     fp = open(fname, "w")
 
@@ -111,17 +104,17 @@ def result_processor():
             os.system("clear")
 
             for i in failed_list:
-                print "%s Failed" % i
+                print("%s Failed" % i)
 
-            print "testing \33[32m%s, \33[0min account:\33[32m[%s]\33[0m" % (apiconf.API_HOST, apiconf.USER_NAME)
-            print "\33[32m%d passed\33[0m, \33[31m%d failed\33[0m, %d total" % (succ_count, failed_count, total_count)
+            print("testing \33[32m%s, \33[0min account:\33[32m[%s]\33[0m" % (apiconf.API_HOST, apiconf.USER_NAME))
+            print("\33[32m%d passed\33[0m, \33[31m%d failed\33[0m, %d total" % (succ_count, failed_count, total_count))
 
         def _refresh_for_jenkis():
 
             for i in failed_list:
-                print "%s" % i
+                print("%s" % i)
 
-            print "%d passed, %d failed, %d total" % (succ_count, failed_count, total_count)
+            print("%d passed, %d failed, %d total" % (succ_count, failed_count, total_count))
 
         if util.plat_form() == "Mac":
             _refresh_for_mac()
@@ -165,7 +158,6 @@ def result_processor():
 
 
 def colect_result(fds):
-
     processor = result_processor()
     processor.next()
 
@@ -175,7 +167,7 @@ def colect_result(fds):
         rds = select.select(file_objs, [], [], apiconf.WAIT_TIME_OUT)
 
         if not rds[0]:
-            print "wait for fd timeout:[%s], at %s" % (apiconf.WAIT_TIME_OUT, time.strftime("%H:%M:%S"))
+            print("wait for fd timeout:[%s], at %s" % (apiconf.WAIT_TIME_OUT, time.strftime("%H:%M:%S")))
             break
 
         items = []
@@ -192,7 +184,6 @@ def colect_result(fds):
 
 
 def multi_run():
-
     q_list = [Queue.Queue() for _ in xrange(0, apiconf.PROCESS_COUNT)]
     pids = list()
     pipes = list()
@@ -200,12 +191,12 @@ def multi_run():
     index = 0
     for case in case_list(mark="single", is_reversed=True):
         # 第一步找出所有没有特殊要求的case，打散了跑，没有特殊需求是指可以并发跑不会冲突的
-        q_list[(index % (apiconf.PROCESS_COUNT-1)) if apiconf.PROCESS_COUNT > 1 else 0].put(case)
+        q_list[(index % (apiconf.PROCESS_COUNT - 1)) if apiconf.PROCESS_COUNT > 1 else 0].put(case)
         index += 1
 
     for case in case_list(mark="single", is_reversed=False):
         # 第二步找出必须串行跑得case，单独放在一个进程跑
-        q_list[apiconf.PROCESS_COUNT-1].put(case)
+        q_list[apiconf.PROCESS_COUNT - 1].put(case)
 
     for i in xrange(0, apiconf.PROCESS_COUNT):
 
@@ -223,10 +214,10 @@ def multi_run():
             sys.stdout = _PFile()
             while not q_list[i].empty():
                 kp = q_list[i].get()
-                print "Now picking up case %s" % kp
+                print("Now picking up case %s" % kp)
                 pytest.main(args=["-k", kp, "-v"])
 
-            print "I'm exit"
+            print("I'm exit")
 
             return
 
@@ -241,18 +232,18 @@ def multi_run():
 
 
 if util.plat_form() == "Mac":
-    print "testing \33[32m%s, \33[0min account:\33[32m[%s]\33[0m" % (apiconf.API_HOST, apiconf.USER_NAME)
+    print("testing \33[32m%s, \33[0min account:\33[32m[%s]\33[0m" % (apiconf.API_HOST, apiconf.USER_NAME))
 else:
-    print "testing %s, in account:[%s]" % (apiconf.API_HOST, apiconf.USER_NAME)
+    print("testing %s, in account:[%s]" % (apiconf.API_HOST, apiconf.USER_NAME))
 
 # mode ?
 if len(sys.argv) >= 2 and sys.argv[1].startswith("--") and sys.argv[1][2:] in bdp_run_mode:
     try:
         eval("meta_data.%s()" % sys.argv[1][2:])
         exit(0)
-    except Exception, e:
-        print "exception occured: %s, trace_bak is\n %s" % (e.message, traceback.format_exc())
-        exit(1)
+    except Exception:
+        # print("exception occured: %s, trace_bak is\n %s" % (e.message, traceback.format_exc()))
+        # # exit(1)
 elif len(sys.argv) == 1:
     multi_run()
 else:

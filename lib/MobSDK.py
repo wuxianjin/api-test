@@ -15,19 +15,13 @@ from conf import apiconf
 from util import log
 
 
-#
-def dec_log(reserved_param=None):
-    def _out_wrap(func):
-        def _wrap_func(*args, **kwargs):
-            rst = func(*args, **kwargs)
-            assert isinstance(args[0], mobSdk)
-            log.getlog(APIRequest.LOG_NAME).debug("API [%s] Response: %s" % (func.func_name, args[0].raw_data))
-            return rst
+def dec_log(func):
+    def _wrap_func(*args, **kwargs):
+        func(*args, **kwargs)
+        assert isinstance(args[0], mobSdk)
+        log.getlog(APIRequest.LOG_NAME).debug("API [%s] Response: %s" % (func.func_name, args[0].raw_data))
 
-        _wrap_func.__name__ = func.__name__
-        return _wrap_func
-
-    return _out_wrap
+    return _wrap_func
 
 
 class mobSdk:
@@ -38,9 +32,7 @@ class mobSdk:
         self.raw_data = {}
         self.access_token = access_token
         self.http_request = APIRequest(apiconf.API_HOST, apiconf.API_PORT)
-        # online
         self.http_request.url_host = "%s" % (self.http_request.url_host)
-        # add headers
         self.http_request.add_header("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
         self.trace_id = ""
 
@@ -78,9 +70,6 @@ class mobSdk:
         self.trace_id = "trace_%s" % uuid.uuid3(uuid.NAMESPACE_DNS, "%s_%s_%s" % (url, time.time(), randint(0, 100000)))
         params["trace_id"] = self.trace_id
         # params["system"] = 'android'
-        # params["app_ver"] = '5.3'
-        # params["ct_id"] = 'ct_9f98ead215523a181035f871cf410a3e'
-
         return "%s?%s" % (url, urlencode(params))
 
     # todo
@@ -105,7 +94,7 @@ class mobSdk:
 
         self.raw_data = self.http_request.post(url, raw_body).read()
 
-    @dec_log()
+    @dec_log
     def mob_chart_data(self, system, app_ver, ct_id):
         req_param = {
             "ct_id": ct_id,
