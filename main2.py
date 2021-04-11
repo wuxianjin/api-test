@@ -184,7 +184,7 @@ def colect_result(fds):
 
 
 def multi_run():
-    q_list = [Queue.Queue() for _ in xrange(0, apiconf.PROCESS_COUNT)]
+    q_list = [Queue.Queue() for _ in range(0, apiconf.PROCESS_COUNT)]
     pids = list()
     pipes = list()
 
@@ -198,7 +198,7 @@ def multi_run():
         # 第二步找出必须串行跑得case，单独放在一个进程跑
         q_list[apiconf.PROCESS_COUNT - 1].put(case)
 
-    for i in xrange(0, apiconf.PROCESS_COUNT):
+    for i in range(0, apiconf.PROCESS_COUNT):
 
         r, w = os.pipe()
         pid = os.fork()
@@ -243,7 +243,7 @@ if len(sys.argv) >= 2 and sys.argv[1].startswith("--") and sys.argv[1][2:] in bd
         exit(0)
     except Exception:
         # print("exception occured: %s, trace_bak is\n %s" % (e.message, traceback.format_exc()))
-        # # exit(1)
+        exit(1)
 elif len(sys.argv) == 1:
     multi_run()
 else:

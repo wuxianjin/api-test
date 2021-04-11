@@ -1,7 +1,0 @@
-{
-  "case/account/test_account.py": true,
-  "case/account/test_group.py": true,
-  "case/mob/test_mob.py": true,
-  "case/openbdp/test_openbdp_group.py": true,
-  "xianjin/test_parametrize.py": true
-}

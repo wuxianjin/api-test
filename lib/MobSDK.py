@@ -6,7 +6,7 @@
 @time: 2018-04-17-14 
 """
 import json
-from urllib import urlencode
+from urllib import parse
 import time
 import uuid
 from random import randint
@@ -47,7 +47,8 @@ class mobSdk:
         str_data = ""
 
         if isinstance(params, dict):
-            str_data = urlencode(params)
+            # str_data = urlencode(params)
+            str_data = parse.urlencode(params)
         elif isinstance(params, list):
             str_data = "\r\n".join(params)
         elif isinstance(params, str):
@@ -70,7 +71,7 @@ class mobSdk:
         self.trace_id = "trace_%s" % uuid.uuid3(uuid.NAMESPACE_DNS, "%s_%s_%s" % (url, time.time(), randint(0, 100000)))
         params["trace_id"] = self.trace_id
         # params["system"] = 'android'
-        return "%s?%s" % (url, urlencode(params))
+        return "%s?%s" % (url, parse.urlencode(params))
 
     # todo
     def call_method_and_succ(self, method_name, *args, **kwargs):

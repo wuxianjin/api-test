@@ -14,8 +14,7 @@ Arguments）都将被收集并汇集成一个称为“param”的元组（Tuple�
 param的字典（Dictionary）。'''
 
 def argsFunc(a, *args):
-    print a
-    print args
+    print(args)
 
 
 argsFunc(1, "tt", 3)
@@ -26,20 +25,20 @@ argsFunc(1, "tt", 3)
 为了区分，我把 *args 称作为数组参数，**kwargs 称作为字典参数
 '''
 def kwargsFunc(a,**kwargs):
-    print a
-    print kwargs
+    print (a)
+    print (kwargs)
 
 
 kwargsFunc(1,name='wxj',psword="123")
 
 # 合用时*args必须位于**kwargs之前
 def test_kwargs(first, *args, **kwargs):
-   print 'Required argument: ', first
-   print kwargs
+   print ('Required argument: ', first)
+   print (kwargs)
    for v in args:
-      print 'Optional argument (*args): ', v
+      print ('Optional argument (*args): ', v)
    for k, v in kwargs.items():
-      print 'Optional argument %s (*kwargs): %s' % (k, v)
+      print ('Optional argument %s (*kwargs): %s' % (k, v))
 
 
 test_kwargs(1, 2, 3, 4, k1=5, k2=6)

@@ -44,10 +44,10 @@ class APIRequest:
         resp.read = _read
         try:
             resp.raise_for_status()
-        except Exception, e:
-            print "resp===>\n", resp.read()
-            print repr(e)
+        except Exception as e:
+            print(e)
             raise
+
         return resp
 
     def post(self, url, raw_data, stream=False, headers={}):
@@ -68,8 +68,9 @@ class APIRequest:
         resp.read = _read
         try:
             resp.raise_for_status()
-        except Exception, e:
-            print "resp===>\n", resp.read()
-            print repr(e)
+        except Exception as e:
+            print
+            "resp===>\n", resp.read()
+            print(repr(e))
             raise
         return resp
